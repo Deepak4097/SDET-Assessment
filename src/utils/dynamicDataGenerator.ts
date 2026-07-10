@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { User } from "../model/user";
+import { User } from "../model/User";
 
-const TITLES = ["Mr", "Mrs", "Miss"];
+const TITLES = ["Mr", "Mrs"];
 
 const COUNTRIES = [
     "India",

@@ -1,20 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { ApiClient } from "../../src/api/apiClient";
 import { LoginApi } from "../../src/api/loginApi";
+import { USERS } from "../../src/testData/users";
 
 test.describe("Login API", () => {
 
     let loginApi: LoginApi;
-
-    const VALID_USER = {
-        email: "vikram123@gmail.com",
-        password: "12345",
-    };
-
-    const INVALID_USER = {
-        email: "invalid@gmail.com",
-        password: "invalid123",
-    };
 
     test.beforeEach(async ({ request }) => {
 
@@ -27,8 +18,8 @@ test.describe("Login API", () => {
     test("TA04 - Verify Login with Valid Credentials", async () => {
 
         const response = await loginApi.verifyLogin(
-            VALID_USER.email,
-            VALID_USER.password
+            USERS.VALID_USER.email,
+            USERS.VALID_USER.password  
         );
 
         expect(response.responseCode).toBe(200);
@@ -39,8 +30,8 @@ test.describe("Login API", () => {
     test("TA05 - Verify Login with Invalid Credentials", async () => {
 
         const response = await loginApi.verifyLogin(
-            INVALID_USER.email,
-            INVALID_USER.password
+            USERS.INVALID_USER.email,
+            USERS.INVALID_USER.password
         );
 
         expect(response.responseCode).toBe(404);
@@ -51,7 +42,7 @@ test.describe("Login API", () => {
     test("TA06 - Verify Login without Password", async () => {
 
         const response = await loginApi.verifyLoginWithoutPassword(
-            VALID_USER.email
+            USERS.VALID_USER.email
         );
 
         expect(response.responseCode).toBe(400);
