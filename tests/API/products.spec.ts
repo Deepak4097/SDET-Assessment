@@ -1,0 +1,64 @@
+import { test, expect } from "@playwright/test";
+import { ApiClient } from "../../src/api/apiClient";
+import { ProductApi } from "../../src/api/productApi";
+
+test.describe("Products API", () => {
+
+    let productApi: ProductApi;
+
+    test.beforeEach(({ request }) => {
+
+        const apiClient = new ApiClient(request);
+
+        productApi = new ProductApi(apiClient);
+
+    });
+
+    test("TA01 - Get Products List", async () => {
+
+        const response = await productApi.getProductsList();
+
+        expect(response.responseCode).toBe(200);
+
+        expect(response.products).toBeDefined();
+
+        expect(Array.isArray(response.products)).toBeTruthy();
+
+        expect(response.products.length).toBeGreaterThan(0);
+
+    });
+
+    test("TA02 - Get Brands List", async () => {
+
+        const response = await productApi.getBrandsList();
+
+        expect(response.responseCode).toBe(200);
+
+        expect(response.brands).toBeDefined();
+
+        expect(Array.isArray(response.brands)).toBeTruthy();
+
+        expect(response.brands.length).toBeGreaterThan(0);
+
+    });
+
+    test("TA03 - Search Product", async () => {
+
+        const keyword = "top";
+
+        const response = await productApi.searchProduct(keyword);
+
+        expect(response.responseCode).toBe(200);
+
+        expect(response.products).toBeDefined();
+
+        expect(response.products.length).toBeGreaterThan(0);
+
+        const matchingProducts = response.products.filter((product: any) =>
+            product.name.toLowerCase().includes(keyword.toLowerCase())
+        );
+
+        expect(matchingProducts.length).toBeGreaterThan(0);
+
+    });
+});
