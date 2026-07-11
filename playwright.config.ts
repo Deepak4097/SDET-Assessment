@@ -3,6 +3,8 @@ dotenv.config();
 
 import { defineConfig, devices } from '@playwright/test';
 
+const isCI = Boolean(process.env.CI);
+const isHeadless = isCI || process.env.HEADLESS === 'true';
 
 /**
  * Read environment variables from file.
@@ -27,11 +29,14 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   //workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [['html', { open: 'always' }]],
+  reporter: [
+    ['html', { open: isCI ? 'never' : 'always' }],
+    ['list'],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: process.env.BASE_URL,
-    headless: process.env.HEADLESS === "false",
+    headless: isHeadless,
     screenshot: "only-on-failure",
     video: "retain-on-failure",
     trace: "retain-on-failure"
@@ -43,7 +48,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        headless: false,
+        headless: isHeadless,
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
       },

@@ -3,7 +3,25 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+"scripts": {
+  "RunAll": "playwright test",
+
+  "UIcases": "playwright test tests/UI",
+  "APIcases": "playwright test tests/API",
+
+  "login": "playwright test tests/UI/login.spec.ts",
+  "register": "playwright test tests/UI/registerUser.spec.ts",
+  "products": "playwright test tests/UI/products.spec.ts",
+  "checkout": "playwright test tests/UI/checkout.spec.ts",
+
+  "login-api": "playwright test tests/API/login.spec.ts",
+  "product-api": "playwright test tests/API/product.spec.ts",
+  "user-api": "playwright test tests/API/userLifecycle.spec.ts",
+
+  "headed": "playwright test --headed",
+  "debug": "playwright test --debug",
+  "report": "playwright show-report"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
