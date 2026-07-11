@@ -3,33 +3,24 @@ name: AutomationExercise_SDET
 on:
   workflow_dispatch:
     inputs:
-
-      Test Type:
-        description: Test type to run
-        required: false
+      test_type:
+        description: Select test suite
+        required: true
         default: UI
         type: choice
         options:
           - UI
           - API
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+          - ALL
 
 jobs:
   setup:
-    name: Setup environment
-    timeout-minutes: 30
+    name: Setup Environment
     runs-on: ubuntu-latest
-    env:
-      CI: true
-      HEADLESS: true
+
     steps:
-      - name: Checkout target repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,47 +28,24 @@ jobs:
           node-version: lts/*
           cache: npm
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Prepare environment file
-        shell: bash
-        run: |
-          if [ -f .env ]; then
-            echo ".env already present; keeping it and using it for the run"
-          else
-            echo "BASE_URL=${{ secrets.BASE_URL || 'https://automationexercise.com' }}" > .env
-            echo "HEADLESS=true" >> .env
-          fi
-
-      - name: Upload .env artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: env-file
-          path: .env
-
-  run-tests:
-    name: Run tests
+  execute:
+    name: Execute Tests
     needs: setup
-    timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      CI: true
-      HEADLESS: true
-    steps:
-      - name: Checkout target repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository }}
+    timeout-minutes: 60
 
-      - name: Download .env artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: env-file
-          path: .
+    env:
+      BASE_URL: ${{ vars.BASE_URL }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -85,24 +53,32 @@ jobs:
           node-version: lts/*
           cache: npm
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run UI tests
-        if: ${{ inputs['Test Type'] == 'UI' || github.event_name != 'workflow_dispatch' }}
+      - name: Run UI Tests
+        if: ${{ github.event.inputs.test_type == 'UI' || github.event.inputs.test_type == 'ALL' }}
         run: npm run UIcases
 
-      - name: Run API tests
-        if: ${{ inputs['Test Type'] == 'API' || github.event_name != 'workflow_dispatch' }}
+      - name: Run API Tests
+        if: ${{ github.event.inputs.test_type == 'API' || github.event.inputs.test_type == 'ALL' }}
         run: npm run APIcases
 
-      - name: Upload Playwright report
-        if: ${{ !cancelled() }}
+      - name: Upload Playwright Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ inputs['Test Type'] || 'all' }}
+          name: playwright-report
           path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
           retention-days: 30

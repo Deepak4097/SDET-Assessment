@@ -1,4 +1,6 @@
 import * as dotenv from "dotenv";
+import { config } from "./src/utils/config";
+
 dotenv.config();
 
 import { defineConfig, devices } from '@playwright/test';
@@ -36,7 +38,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: process.env.BASE_URL,
-    headless: isHeadless,
+    headless: config.headless,
     screenshot: "only-on-failure",
     video: "retain-on-failure",
     trace: "retain-on-failure"
