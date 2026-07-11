@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { ApiClient } from "../../src/api/apiClient";
 import { ProductApi } from "../../src/api/productApi";
+import { PRODUCTS } from "../../src/testData/products";
 
 test.describe("Products API", () => {
 
@@ -44,21 +45,23 @@ test.describe("Products API", () => {
 
     test("TA03 - Search Product", async () => {
 
-        const keyword = "top";
-
-        const response = await productApi.searchProduct(keyword);
+        const response = await productApi.searchProduct(
+            PRODUCTS.SEARCH_KEYWORD
+        );
 
         expect(response.responseCode).toBe(200);
 
         expect(response.products).toBeDefined();
-
         expect(response.products.length).toBeGreaterThan(0);
 
         const matchingProducts = response.products.filter((product: any) =>
-            product.name.toLowerCase().includes(keyword.toLowerCase())
+            product.name
+                .toLowerCase()
+                .includes(PRODUCTS.SEARCH_KEYWORD.toLowerCase())
         );
 
         expect(matchingProducts.length).toBeGreaterThan(0);
 
     });
+ 
 });

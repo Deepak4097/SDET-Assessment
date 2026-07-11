@@ -9,7 +9,7 @@ export class BasePage {
     }
 
     async waitForPageLoad() {
-        await this.page.waitForLoadState("networkidle");
+        await this.page.waitForLoadState("domcontentloaded");
     }
 
     async click(locator: string | Locator) {
@@ -87,4 +87,5 @@ export class BasePage {
     async expectVisible(locator: string) {
     await expect(this.page.locator(locator)).toBeVisible();
 }
+
 }

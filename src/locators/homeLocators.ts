@@ -10,7 +10,7 @@ export const HOME_LOCATORS = {
 
     productsLink: 'a[href="/products"]',
 
-    cartLink: 'a[href="/view_cart"]',
+    cartLink: 'a[href="/view_cart"] i.fa-shopping-cart',
 
     loggedInUser: 'a:has-text("Logged in as")'
 
