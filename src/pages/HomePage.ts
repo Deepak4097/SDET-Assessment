@@ -1,29 +1,41 @@
 import { Page, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { HOME_LOCATORS } from "../locators/homeLocators";
+import { th } from "@faker-js/faker";
 
 export class HomePage extends BasePage {
+   
+    readonly homeLogo = this.page.locator('img[alt="Website for automation practice"]');
+    readonly signupLoginLink= this.page.locator( 'a[href="/login"]');
+    readonly logoutLink = this.page.locator( 'a[href="/logout"]');
+    readonly deleteAccountLink = this.page.locator( 'a[href="/delete_account"]');
+    readonly productsLink = this.page.locator( 'a[href="/products"]');
+    readonly cartLink = this.page.locator('a[href="/view_cart"] i.fa-shopping-cart');
+    readonly loggedInUser = this.page.locator('a:has-text("Logged in as")');
+    readonly continueButton=this.page.locator('a[data-qa="continue-button"]')
 
     constructor(page: Page) {
         super(page);
     }
 
     async navigateToHome() {
+
         await this.goto("/");
     }
 
     async verifyHomePageLoaded() {
-        await this.waitForVisible(HOME_LOCATORS.homeLogo);
+
+        await this.waitForVisible(this.homeLogo);
     }
 
     async clickSignupLogin() {
-        await this.click(HOME_LOCATORS.signupLoginLink);
+
+        await this.click(this.signupLoginLink);
     }
 
 
     async clickProducts() {
-        await this.click(HOME_LOCATORS.productsLink);
 
+        await this.click(this.productsLink);
         await this.page.waitForLoadState("domcontentloaded");
 
         for (let attempt = 0; attempt < 2; attempt++) {
@@ -41,23 +53,33 @@ export class HomePage extends BasePage {
     }
 
     async clickCart() {
-        await this.click(HOME_LOCATORS.cartLink);
+
+        await this.click(this.cartLink);
     }
+
     async clickDeleteAccount() {
 
-        await this.click(HOME_LOCATORS.deleteAccountLink);
-
+        await this.click(this.deleteAccountLink);
         await this.waitForPageLoad();
 
 
     }
-    async verifyLoggedInUser() {
-        await this.expectVisible(HOME_LOCATORS.loggedInUser);
+    async verifyLoggedInUser(userName: any) {
+        
+        let loggedInUserName:string=  " Logged in as "+userName; 
+        await expect(this.loggedInUser).toHaveText(loggedInUserName);
     }
-
     async clickLogout() {
-        await this.click(HOME_LOCATORS.logoutLink);
+
+        await this.click(this.logoutLink);
         await this.waitForPageLoad();
+    }
+
+    async clickContinue() {
+
+        await this.click(this.continueButton);
+        await this.waitForPageLoad();
+
     }
 
 }

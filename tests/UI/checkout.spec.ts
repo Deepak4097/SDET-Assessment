@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test ,expect } from "@playwright/test";
 
 import { HomePage } from "../../src/pages/HomePage";
 import { LoginPage } from "../../src/pages/LoginPage";
@@ -21,19 +21,19 @@ test.describe("Checkout", () => {
         const checkoutPage = new CheckoutPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickSignupLogin();
+
         await loginPage.verifyLoginPageLoaded();
 
-        await loginPage.login(
-            USERS.VALID_USER.email,
-            USERS.VALID_USER.password
-        );
+        await loginPage.login(USERS.VALID_USER.email,USERS.VALID_USER.password);
 
-        await homePage.verifyLoggedInUser();
+        await homePage.verifyLoggedInUser(USERS.VALID_USER.name);
 
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.addProductToCart(PRODUCTS.MEN_TSHIRT.id);
@@ -50,7 +50,7 @@ test.describe("Checkout", () => {
 
         await checkoutPage.completePayment(PAYMENT);
 
-        await checkoutPage.verifyOrderPlacedSuccessfully();
+        await expect(checkoutPage.orderPlacedMessage).toHaveText("Order Placed!");
 
     });
 
@@ -61,9 +61,11 @@ test.describe("Checkout", () => {
         const cartPage = new CartPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.addProductToCart(PRODUCTS.MEN_TSHIRT.id);
@@ -85,19 +87,19 @@ test.describe("Checkout", () => {
         const checkoutPage = new CheckoutPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickSignupLogin();
+
         await loginPage.verifyLoginPageLoaded();
 
-        await loginPage.login(
-            USERS.VALID_USER.email,
-            USERS.VALID_USER.password
-        );
+        await loginPage.login(USERS.VALID_USER.email,USERS.VALID_USER.password);
 
-        await homePage.verifyLoggedInUser();
+        await homePage.verifyLoggedInUser(USERS.VALID_USER.name);
 
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.addProductToCart(PRODUCTS.MEN_TSHIRT.id);

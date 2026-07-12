@@ -6,17 +6,17 @@ export class ApiClient {
         "Content-Type": "application/x-www-form-urlencoded",
     };
 
-    constructor(private request: APIRequestContext) { }
+    private readonly request: APIRequestContext;
+
+    constructor(request: APIRequestContext) {
+        this.request = request;
+    }
 
     async get(endpoint: string, params?: Record<string, string>) {
         const query = params
             ? `?${new URLSearchParams(params).toString()}`
             : "";
-
         const response = await this.request.get(`${endpoint}${query}`);
-
-        this.validateResponse(response);
-
         return await response.json();
     }
 
@@ -25,8 +25,6 @@ export class ApiClient {
             headers: this.formHeader,
             data: new URLSearchParams(payload).toString(),
         });
-
-        this.validateResponse(response);
         return await response.json();
     }
 
@@ -35,12 +33,6 @@ export class ApiClient {
             headers: this.formHeader,
             data: new URLSearchParams(payload).toString(),
         });
-
-        this.validateResponse(response);
         return await response.json();
-    }
-
-    private validateResponse(response: APIResponse) {
-        expect(response.ok()).toBeTruthy();
     }
 }

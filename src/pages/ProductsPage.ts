@@ -1,8 +1,16 @@
 import { expect, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { PRODUCTS_LOCATORS } from "../locators/productsLocators";
 
 export class ProductsPage extends BasePage {
+
+    readonly productsTitle = this.page.locator('h2.title:text("All Products")');
+    readonly searchInput = this.page.locator('#search_product');
+    readonly searchButton = this.page.locator('#submit_search');
+    readonly searchedProductsTitle = this.page.locator('h2.title.text-center');
+    readonly productCards = this.page.locator('.features_items .product-image-wrapper');
+    readonly productNames = this.page.locator('.features_items .productinfo p');
+    readonly viewCartLink = this.page.locator("div.modal-content a[href='/view_cart']");
+    readonly continueShoppingButton = this.page.locator(".modal-footer .btn-success");
 
     constructor(page: Page) {
         super(page);
@@ -10,28 +18,22 @@ export class ProductsPage extends BasePage {
 
     async verifyProductsPageLoaded() {
 
-       await expect(this.page).toHaveURL(/products/);
-
-        await expect(
-            this.page.locator(PRODUCTS_LOCATORS.productsTitle)
-        ).toHaveText("All Products");
+        await expect(this.page).toHaveURL(/products/);
+        await expect(this.productsTitle).toHaveText("All Products");
 
     }
 
     async searchProduct(productName: string) {
 
-        await this.fill(PRODUCTS_LOCATORS.searchInput, productName);
-        await this.click(PRODUCTS_LOCATORS.searchButton);
-
-        await expect(
-            this.page.locator(PRODUCTS_LOCATORS.searchedProductsTitle)
-        ).toBeVisible();
+        await this.fill(this.searchInput, productName);
+        await this.click(this.searchButton);
+        await expect(this.searchedProductsTitle).toBeVisible();
 
     }
 
     async verifySearchResults(productName: string) {
 
-        const products = this.page.locator(PRODUCTS_LOCATORS.productNames);
+        const products = this.productNames;
 
         const count = await products.count();
 
@@ -56,30 +58,22 @@ export class ProductsPage extends BasePage {
 
     }
 
+    async clickViewCart() {
 
+        await this.click(this.viewCartLink);
 
-async clickViewCart() {
+    }
 
-    await this.click(PRODUCTS_LOCATORS.viewCartLink);
+    async addProductToCart(productId: string) {
 
-}
+        const card = this.page.locator(`.product-image-wrapper:has(a[data-product-id="${productId}"])`);
+        await card.hover();
+        await card.locator(`.product-overlay a[data-product-id="${productId}"]`).click();
+    }
 
-async addProductToCart(productId: string) {
+    async clickContinueShopping() {
 
-    const card = this.page.locator(
-        `.product-image-wrapper:has(a[data-product-id="${productId}"])`
-    );
+        await this.click(this.continueShoppingButton);
 
-    await card.hover();
-
-    await card.locator(
-        `.product-overlay a[data-product-id="${productId}"]`
-    ).click();
-}
-
-async clickContinueShopping() {
-
-    await this.click(PRODUCTS_LOCATORS.continueShoppingButton);
-
-}
+    }
 }

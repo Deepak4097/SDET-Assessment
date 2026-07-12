@@ -31,7 +31,7 @@ const MONTHS = [
 export class DataGenerator {
 
     static generateUser(): User {
-
+        
         const firstName = faker.person.firstName();
         const lastName = faker.person.lastName();
 

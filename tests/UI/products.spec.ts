@@ -12,9 +12,11 @@ test.describe("Products", () => {
         const productsPage = new ProductsPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.searchProduct(PRODUCTS.SEARCH_KEYWORD);
@@ -29,15 +31,19 @@ test.describe("Products", () => {
         const cartPage = new CartPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.addProductToCart(PRODUCTS.BLUE_TOP.id);
+        
         await productsPage.clickViewCart();
 
         await cartPage.verifyProductAddedToCart(PRODUCTS.BLUE_TOP.name);
+        
         await cartPage.verifyProductQuantity(PRODUCTS.BLUE_TOP.name, "1");
     });
 
@@ -48,10 +54,13 @@ test.describe("Products", () => {
         const cartPage = new CartPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.addProductToCart(PRODUCTS.BLUE_TOP.id);
+        
         await productsPage.clickContinueShopping();
 
         await productsPage.addProductToCart(PRODUCTS.MEN_TSHIRT.id);
@@ -59,9 +68,11 @@ test.describe("Products", () => {
         await productsPage.clickViewCart();
 
         await cartPage.verifyProductAddedToCart(PRODUCTS.BLUE_TOP.name);
+        
         await cartPage.verifyProductAddedToCart(PRODUCTS.MEN_TSHIRT.name);
 
         await cartPage.verifyProductQuantity(PRODUCTS.BLUE_TOP.name, "1");
+        
         await cartPage.verifyProductQuantity(PRODUCTS.MEN_TSHIRT.name, "1");
     });
 
@@ -72,12 +83,15 @@ test.describe("Products", () => {
         const cartPage = new CartPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickProducts();
+        
         await productsPage.verifyProductsPageLoaded();
 
         await productsPage.addProductToCart(PRODUCTS.BLUE_TOP.id);
+        
         await productsPage.clickContinueShopping();
 
         await homePage.clickCart();

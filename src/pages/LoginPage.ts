@@ -1,53 +1,43 @@
-import { Page, expect } from "@playwright/test";
+import { Page, expect, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { LOGIN_LOCATORS } from "../locators/loginLocators";
 
 export class LoginPage extends BasePage {
 
+    readonly signupName= this.page.locator('input[data-qa="signup-name"]');
+    readonly signupEmail=this.page.locator('input[data-qa="signup-email"]') ;
+    readonly signupButton=this.page.locator('button[data-qa="signup-button"]') ;
+    readonly loginEmail=this.page.locator('input[data-qa="login-email"]') ;
+    readonly loginPassword=this.page.locator('input[data-qa="login-password"]') ;
+    readonly loginButton=this.page.locator('button[data-qa="login-button"]') ;
+    readonly newUserSignupText=this.page.locator('text=New User Signup!') ;
+    readonly loginToYourAccountText=this.page.locator('text=Login to your account') ;
+    readonly loginErrorMessage=this.page.locator('text=Your email or password is incorrect!') ;
+
     constructor(page: Page) {
         super(page);
+    
     }
-
-   async verifyLoginPageLoaded() {
+    
+    async verifyLoginPageLoaded() {
+        
     await expect(this.page).toHaveURL(/.*login/);
-
-    await this.waitForVisible(LOGIN_LOCATORS.loginEmail);
-
-    await expect(
-        this.page.locator(LOGIN_LOCATORS.loginToYourAccountText)
-    ).toBeVisible();
+    await this.waitForVisible(this.loginEmail);
+    await expect(this.loginToYourAccountText).toBeVisible();
 }
 
     async startSignup(name: string, email: string) {
 
-        await this.fill(LOGIN_LOCATORS.signupName, name);
-        await this.fill(LOGIN_LOCATORS.signupEmail, email);
-        await this.click(LOGIN_LOCATORS.signupButton);
-
-    }
+    await this.fill(this.signupName, name);
+    await this.fill(this.signupEmail, email);
+    await this.click(this.signupButton);
+}
 
     async login(email: string, password: string) {
 
-        await this.fill(LOGIN_LOCATORS.loginEmail, email);
-        await this.fill(LOGIN_LOCATORS.loginPassword, password);
-        await this.click(LOGIN_LOCATORS.loginButton);
-
-        await this.waitForPageLoad();
-
-    }
-
-    async verifyInvalidLoginMessage() {
-
-        await expect(this.page.locator(LOGIN_LOCATORS.loginErrorMessage))
-            .toBeVisible();
-    }
-
-    async verifyInvalidLoginError() {
-
-    await this.expectVisible(LOGIN_LOCATORS.loginErrorMessage);
-
+    await this.fill(this.loginEmail, email);
+    await this.fill(this.loginPassword, password);
+    await this.click(this.loginButton);
+    await this.waitForPageLoad();
 }
-
-    
 
 }

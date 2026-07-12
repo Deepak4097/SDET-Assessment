@@ -1,7 +1,7 @@
-import { test } from "@playwright/test";
+import { test,expect } from "@playwright/test";
 import { HomePage } from "../../src/pages/HomePage";
 import { LoginPage } from "../../src/pages/LoginPage";
-import { USERS, INVALID_PASSWORD } from "../../src/testData/users";
+import { USERS } from "../../src/testData/users";
 
 test.describe("Authentication", () => {
 
@@ -11,17 +11,16 @@ test.describe("Authentication", () => {
         const loginPage = new LoginPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickSignupLogin();
+
         await loginPage.verifyLoginPageLoaded();
 
-        await loginPage.login(
-            USERS.VALID_USER.email,
-            USERS.VALID_USER.password
-        );
+        await loginPage.login(USERS.VALID_USER.email,USERS.VALID_USER.password);
 
-        await homePage.verifyLoggedInUser();
+        await homePage.verifyLoggedInUser(USERS.VALID_USER.name);
 
     });
 
@@ -31,17 +30,16 @@ test.describe("Authentication", () => {
         const loginPage = new LoginPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickSignupLogin();
+
         await loginPage.verifyLoginPageLoaded();
 
-        await loginPage.login(
-            USERS.INVALID_USER.email,
-            USERS.INVALID_USER.password
-        );
+        await loginPage.login(USERS.INVALID_USER.email,USERS.INVALID_USER.password);
 
-        await loginPage.verifyInvalidLoginError();
+        await expect(loginPage.loginErrorMessage).toBeVisible();
 
     });
 
@@ -51,37 +49,36 @@ test.describe("Authentication", () => {
         const loginPage = new LoginPage(page);
 
         await homePage.navigateToHome();
+        
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickSignupLogin();
+
         await loginPage.verifyLoginPageLoaded();
 
-        await loginPage.login(
-            USERS.VALID_USER.email,
-            INVALID_PASSWORD
-        );
+        await loginPage.login(USERS.VALID_USER.email,USERS.INVALID_USER.password);
 
-        await loginPage.verifyInvalidLoginError();
+        await expect(loginPage.loginErrorMessage).toBeVisible();
 
     });
 
     test("TC05 - Logout User", async ({ page }) => {
 
         const homePage = new HomePage(page);
+
         const loginPage = new LoginPage(page);
 
         await homePage.navigateToHome();
+
         await homePage.verifyHomePageLoaded();
 
         await homePage.clickSignupLogin();
+
         await loginPage.verifyLoginPageLoaded();
 
-        await loginPage.login(
-            USERS.VALID_USER.email,
-            USERS.VALID_USER.password
-        );
+        await loginPage.login(USERS.VALID_USER.email,USERS.VALID_USER.password);
 
-        await homePage.verifyLoggedInUser();
+        await homePage.verifyLoggedInUser(USERS.VALID_USER.name);
 
         await homePage.clickLogout();
 

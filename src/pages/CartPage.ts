@@ -1,8 +1,18 @@
 import { Page, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { CART_LOCATORS } from "../locators/cartLocators";
 
 export class CartPage extends BasePage {
+
+    readonly productName = this.page.locator(".cart_description h4 a");
+    readonly quantity = this.page.locator(".cart_quantity button");
+    readonly deleteButton = this.page.locator(".cart_quantity_delete");
+    readonly emptyCartMessage = this.page.locator("#empty_cart p");
+    readonly proceedToCheckoutButton = this.page.locator(".check_out");
+    readonly checkoutModal = this.page.locator("#checkoutModal");
+    readonly registerLoginLink = this.page.locator('#checkoutModal a[href="/login"]');
+    readonly continueOnCartButton = this.page.locator(".close-checkout-modal");
+    readonly guestCheckoutText = this.page.locator('#checkoutModal .modal-body p:first-child');
+
 
     constructor(page: Page) {
         super(page);
@@ -10,70 +20,53 @@ export class CartPage extends BasePage {
 
     async verifyProductInCart(productName: string) {
 
-        await expect(
-            this.page.locator(CART_LOCATORS.productName)
-        ).toContainText(productName);
+        await expect(this.productName).toContainText(productName);
 
     }
 
-async verifyProductAddedToCart(productName: string) {
+    async verifyProductAddedToCart(productName: string) {
 
-    const row = this.page.locator("tr").filter({
-        hasText: productName
-    });
+        const row = this.page.locator("tr").filter({ hasText: productName });
+        await expect(row.locator(this.productName)).toHaveText(productName);
 
-    await expect(
-        row.locator(CART_LOCATORS.productName)
-    ).toHaveText(productName);
+    }
 
-}
+    async verifyProductQuantity(productName: string, quantity: string) {
 
-async verifyProductQuantity(productName: string, quantity: string) {
+        const row = this.page.locator("tr").filter({ hasText: productName });
+        await expect(row.locator(this.quantity)).toHaveText(quantity);
 
-    const row = this.page.locator("tr").filter({
-        hasText: productName
-    });
+    }
 
-    await expect(
-        row.locator(CART_LOCATORS.quantity)
-    ).toHaveText(quantity);
+    async removeProduct() {
+        await (this.deleteButton).click();
+    }
 
-}
+    async verifyProductRemoved(productName: string) {
 
-async removeProduct() {
-    await this.page.locator(CART_LOCATORS.deleteButton).click();
-}
+        await expect(this.productName.filter({ hasText: productName })).toHaveCount(0);
+    }
 
-async verifyProductRemoved(productName: string) {
+    async clickProceedToCheckout() {
 
-    await expect(
-        this.page.locator(CART_LOCATORS.productName).filter({
-            hasText: productName
-        })
-    ).toHaveCount(0);
+        await this.click(this.proceedToCheckoutButton);
+    }
 
-}
+    async verifyCheckoutLoginPrompt() {
 
-async clickProceedToCheckout() {
-    await this.click(CART_LOCATORS.proceedToCheckoutButton);
-}
+        await expect(this.checkoutModal).toBeVisible();
+        await expect(this.guestCheckoutText).toContainText("Register / Login");
 
-async verifyCheckoutLoginPrompt() {
+    }
 
-    await expect(this.page.locator(CART_LOCATORS.checkoutModal))
-        .toBeVisible();
+    async clickRegisterLogin() {
 
-    await expect(this.page.locator(CART_LOCATORS.guestCheckoutText))
-        .toContainText("Register / Login");
+        await this.click(this.registerLoginLink);
+    }
 
-}
+    async continueShoppingFromModal() {
 
-async clickRegisterLogin() {
-    await this.click(CART_LOCATORS.registerLoginLink);
-}
-
-async continueShoppingFromModal() {
-    await this.click(CART_LOCATORS.continueOnCartButton);
-}
+        await this.click(this.continueOnCartButton);
+    }
 
 }

@@ -5,14 +5,17 @@ export class BasePage {
     constructor(protected page: Page) { }
 
     async goto(path: string) {
+
         await this.page.goto(path);
     }
 
     async waitForPageLoad() {
+
         await this.page.waitForLoadState("domcontentloaded");
     }
 
     async click(locator: string | Locator) {
+
         if (typeof locator === "string") {
             await this.page.locator(locator).click();
         } else {
@@ -21,6 +24,7 @@ export class BasePage {
     }
 
     async fill(locator: string | Locator, value: string) {
+
         if (typeof locator === "string") {
             await this.page.locator(locator).fill(value);
         } else {
@@ -29,6 +33,7 @@ export class BasePage {
     }
 
     async getText(locator: string | Locator): Promise<string> {
+
         if (typeof locator === "string") {
             return (await this.page.locator(locator).textContent()) ?? "";
         }
@@ -37,6 +42,7 @@ export class BasePage {
     }
 
     async isVisible(locator: string | Locator): Promise<boolean> {
+
         if (typeof locator === "string") {
             return await this.page.locator(locator).isVisible();
         }
@@ -45,6 +51,7 @@ export class BasePage {
     }
 
     async waitForVisible(locator: string | Locator) {
+
         if (typeof locator === "string") {
             await expect(this.page.locator(locator)).toBeVisible();
         } else {
@@ -53,10 +60,12 @@ export class BasePage {
     }
 
     async waitForURL(url: string) {
+
         await expect(this.page).toHaveURL(url);
     }
 
     async selectByValue(locator: string | Locator, value: string) {
+
         if (typeof locator === "string") {
             await this.page.locator(locator).selectOption(value);
         } else {
@@ -65,6 +74,7 @@ export class BasePage {
     }
 
     async selectByLabel(locator: string | Locator, label: string) {
+
         if (typeof locator === "string") {
             await this.page.locator(locator).selectOption({ label });
         } else {
@@ -73,6 +83,7 @@ export class BasePage {
     }
 
     async check(locator: string | Locator) {
+
         if (typeof locator === "string") {
             await this.page.locator(locator).check();
         } else {
@@ -81,11 +92,13 @@ export class BasePage {
     }
 
     async getTitle(): Promise<string> {
+
         return await this.page.title();
     }
 
     async expectVisible(locator: string) {
-    await expect(this.page.locator(locator)).toBeVisible();
-}
+        
+        await expect(this.page.locator(locator)).toBeVisible();
+    }
 
 }
