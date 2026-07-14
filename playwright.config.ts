@@ -39,6 +39,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL,
     headless: config.headless,
+    launchOptions:{slowMo:1000},
     screenshot: "only-on-failure",
     video: "retain-on-failure",
     trace: "retain-on-failure"
