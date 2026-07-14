@@ -57,7 +57,8 @@ export class HomePage extends BasePage {
 
  
     async verifyLoggedInUser(userName: any) {
-        
+
+        await this.waitForPageLoad();
         let loggedInUserName:string=  " Logged in as "+userName; 
         await expect(this.loggedInUser).toHaveText(loggedInUserName);
     }
