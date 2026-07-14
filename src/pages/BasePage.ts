@@ -32,23 +32,6 @@ export class BasePage {
         }
     }
 
-    async getText(locator: string | Locator): Promise<string> {
-
-        if (typeof locator === "string") {
-            return (await this.page.locator(locator).textContent()) ?? "";
-        }
-
-        return (await locator.textContent()) ?? "";
-    }
-
-    async isVisible(locator: string | Locator): Promise<boolean> {
-
-        if (typeof locator === "string") {
-            return await this.page.locator(locator).isVisible();
-        }
-
-        return await locator.isVisible();
-    }
 
     async waitForVisible(locator: string | Locator) {
 
@@ -59,10 +42,6 @@ export class BasePage {
         }
     }
 
-    async waitForURL(url: string) {
-
-        await expect(this.page).toHaveURL(url);
-    }
 
     async selectByValue(locator: string | Locator, value: string) {
 
@@ -91,14 +70,5 @@ export class BasePage {
         }
     }
 
-    async getTitle(): Promise<string> {
-
-        return await this.page.title();
-    }
-
-    async expectVisible(locator: string) {
-        
-        await expect(this.page.locator(locator)).toBeVisible();
-    }
 
 }

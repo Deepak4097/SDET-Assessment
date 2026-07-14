@@ -22,7 +22,7 @@ export class LoginPage extends BasePage {
         
     await expect(this.page).toHaveURL(/.*login/);
     await this.waitForVisible(this.loginEmail);
-    await expect(this.loginToYourAccountText).toBeVisible();
+    await this.waitForVisible(this.loginToYourAccountText);
 }
 
     async startSignup(name: string, email: string) {

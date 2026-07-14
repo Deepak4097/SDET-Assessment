@@ -5,8 +5,6 @@ import { User } from "../model/User";
 export class SignupPage extends BasePage {
 
     readonly signupName= this.page.locator('input[data-qa="signup-name"]');
-
-
     readonly accountInformationHeading = this.page.locator( 'text=Enter Account Information');
     readonly titleMr = this.page.locator('#id_gender1');
     readonly titleMrs=  this.page.locator('#id_gender2');
@@ -37,7 +35,6 @@ export class SignupPage extends BasePage {
     async verifySignupPageLoaded() {
 
         await this.waitForVisible(this.accountInformationHeading);
-        await expect(this.accountInformationHeading).toBeVisible();
     }
 
     async registerUser(user: User) {
@@ -52,6 +49,8 @@ export class SignupPage extends BasePage {
         await this.selectByValue(this.dayDropdown, user.birth_date);
         await this.selectByLabel(this.monthDropdown, user.birth_month);
         await this.selectByValue(this.yearDropdown, user.birth_year);
+        await this.check(this.newsletterCheckbox);
+        await this.check(this.specialOffersCheckbox);
         await this.fill(this.firstName, user.firstname);
         await this.fill(this.lastName, user.lastname);
         await this.fill(this.company, user.company);

@@ -54,7 +54,7 @@ export class CartPage extends BasePage {
 
     async verifyCheckoutLoginPrompt() {
 
-        await expect(this.checkoutModal).toBeVisible();
+        await this.waitForVisible(this.checkoutModal);
         await expect(this.guestCheckoutText).toContainText("Register / Login");
 
     }

@@ -27,7 +27,7 @@ export class ProductsPage extends BasePage {
 
         await this.fill(this.searchInput, productName);
         await this.click(this.searchButton);
-        await expect(this.searchedProductsTitle).toBeVisible();
+        await this.waitForVisible(this.searchedProductsTitle);
 
     }
 

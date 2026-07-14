@@ -1,13 +1,11 @@
 import { Page, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { th } from "@faker-js/faker";
 
 export class HomePage extends BasePage {
    
     readonly homeLogo = this.page.locator('img[alt="Website for automation practice"]');
     readonly signupLoginLink= this.page.locator( 'a[href="/login"]');
     readonly logoutLink = this.page.locator( 'a[href="/logout"]');
-    readonly deleteAccountLink = this.page.locator( 'a[href="/delete_account"]');
     readonly productsLink = this.page.locator( 'a[href="/products"]');
     readonly cartLink = this.page.locator('a[href="/view_cart"] i.fa-shopping-cart');
     readonly loggedInUser = this.page.locator('a:has-text("Logged in as")');
@@ -57,13 +55,7 @@ export class HomePage extends BasePage {
         await this.click(this.cartLink);
     }
 
-    async clickDeleteAccount() {
-
-        await this.click(this.deleteAccountLink);
-        await this.waitForPageLoad();
-
-
-    }
+ 
     async verifyLoggedInUser(userName: any) {
         
         let loggedInUserName:string=  " Logged in as "+userName; 
